@@ -40,27 +40,31 @@ self.addEventListener("message",e=>{
 });
 
 const decrypt=async req=>{
-  const res=await (await fetch(req)).arrayBuffer();
-  const iv=res.slice(0,8*12);
-  const algo={name:"AES-GCM",iv};
-  const data=res.slice(8*12,res.byteLength);
-  db.transaction("pass").openCursor().onsucess=async e=>{
-    try{
-      const cursor=e.target.result;
-      if(cursor){
-        const key=await deriveKey(cursor.value);
-        const result=await crypto.subtle.decrypt(algo,key,data);
-        if((new TextDecoder()).decode(result.slice(0,8*12))==(new TextDecoder()).decode(iv)){
-          return new Blob([result.slice(8*12,result.byteLength)]);
+  try{
+    const res=await (await fetch(req)).arrayBuffer();
+    const iv=res.slice(0,8*12);
+    const algo={name:"AES-GCM",iv};
+    const data=res.slice(8*12,res.byteLength);
+    db.transaction("pass").openCursor().onsucess=async e=>{
+      try{
+        const cursor=e.target.result;
+        if(cursor){
+          const key=await deriveKey(cursor.value);
+          const result=await crypto.subtle.decrypt(algo,key,data);
+          if((new TextDecoder()).decode(result.slice(0,8*12))==(new TextDecoder()).decode(iv)){
+            return new Blob([result.slice(8*12,result.byteLength)]);
+          }else{
+            cursor.continue();
+          }
         }else{
-          cursor.continue();
+          return new Response(null,{status:401});
         }
-      }else{
-        return new Response(null,{status:401});
+      }catch(err){
+        console.error("openCursor:"+err);
       }
-    }catch(err){
-      console.error("importKey:"+err);
     }
+  }catch(err){
+    console.error("decrypt:"+err);
   }
 };
 
