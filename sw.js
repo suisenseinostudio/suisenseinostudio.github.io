@@ -44,6 +44,7 @@ const deriveKey=async(pass)=>{
     console.error(err);
   }
 };
+console.log("done");
 
 self.addEventListener("message",e=>{
   db.transaction("keys","readwrite").objectStore("pass").add(e.data,e.data);
