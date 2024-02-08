@@ -4,6 +4,7 @@ self.addEventListener("install",e=>{
   const req=indexedDB.open("db",1);
   req.onsuccess=event=>{
     db=event.target.result;
+    db.onerror=errEvent=>console.error("db:"+errEvent.target.errorCode);
   };
   req.onupgradeneeded=event=>{
     try{
