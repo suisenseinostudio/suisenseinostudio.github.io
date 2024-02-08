@@ -68,10 +68,12 @@ const decrypt=async req=>{
         }
       }catch(err){
         console.error("error in openCursor.onsuccess");
+        console.error(err);
       }
     }
   }catch(err){
-    console.error("decrypt:"+err);
+    console.error("error in decrypt");
+    console.error(err);
   }
 };
 
