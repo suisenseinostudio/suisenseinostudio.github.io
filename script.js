@@ -1,8 +1,5 @@
 try{
   const rg=navigator.serviceWorker.register("sw.js");
-  if(rg.active){
-    rg.active.postMessage("hello");
-  }
 }catch(err){
   console.error(err);
 }
