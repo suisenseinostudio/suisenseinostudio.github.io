@@ -2,7 +2,7 @@ let db,passes=[];
 
 self.addEventListener("install",e=>{
   try{
-    const req=indexedDB.open("db",1);
+    const req=indexedDB.open("db",2);
     req.onsuccess=event=>{
       db=event.target.result;
       db.onerror=errEvent=>{
@@ -19,9 +19,10 @@ self.addEventListener("install",e=>{
     };
     req.onupgradeneeded=event=>{
       try{
+        db=event.target.result;
         db.createObjectStore("pass");
       }catch(err){
-        console.error(err);
+        console.log(err);
       }
     };
   }catch(err){
