@@ -85,7 +85,8 @@ const decrypt=async req=>{
 };
 
 self.addEventListener("fetch",e=>{
-  if(e.request.url.test(/\.[a-z]+-e$/)){
+  if(/\.[a-z]+-e$/.test(e.request.url)){
+    console.log("encrypted file");
     e.respondWith(decrypt(e.request));
   }else{
     e.respondWith(fetch(e.request));
