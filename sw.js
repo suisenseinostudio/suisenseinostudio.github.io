@@ -1,4 +1,4 @@
-let db;
+let db,passes=[];
 
 self.addEventListener("install",e=>{
   try{
@@ -8,6 +8,13 @@ self.addEventListener("install",e=>{
       db.onerror=errEvent=>{
         console.error("error in db");
         console.error(errEvent.target.errorCode);
+      };
+      db.transaction("pass").openCursor().onsuccess=e=>{
+        const cursor=e.target.result;
+        if(cursor){
+          passes.push(cursor.value);
+          cursor.continue();
+        }
       };
     };
     req.onupgradeneeded=event=>{
@@ -56,29 +63,19 @@ const decrypt=async req=>{
     const iv=res.slice(0,8*12);
     const algo={name:"AES-GCM",iv};
     const data=res.slice(8*12,res.byteLength);
-    db.transaction("pass").openCursor().onsuccess=async e=>{
-      try{
-        const cursor=e.target.result;
-        if(cursor){
-          console.log(`decrypting with "${cursor.value}"...`)
-          const key=await deriveKey(cursor.value);
-          const result=await crypto.subtle.decrypt(algo,key,data);
-          if((new TextDecoder()).decode(result.slice(0,8*12))==(new TextDecoder()).decode(iv)){
-            console.log("succeeded");
-            return new Blob([result.slice(8*12,result.byteLength)]);
-          }else{
-            console.log("failed");
-            cursor.continue();
-          }
-        }else{
-          console.log("no more pass");
-          return new Response(null,{status:401});
-        }
-      }catch(err){
-        console.error("error in openCursor.onsuccess");
-        console.error(err);
+    for(const pass of passes){
+      console.log(`decrypting with "${pass}"...`);
+      const key=await deriveKey(pass);
+      const result=await crypto.subtle.decrypt(algo,key,data);
+      if((new TextDecoder()).decode(result.slice(0,8*12))==(new TextDecoder()).decode(iv)){
+        console.log("succeeded");
+        return new Blob([result.slice(8*12,result.byteLength)]);
+      }else{
+        console.log("failed");
       }
     }
+    console.log("no more pass");
+    return new Response(null,{status:401});
   }catch(err){
     console.error("error in decrypt");
     console.error(err);
