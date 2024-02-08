@@ -1,5 +1,5 @@
 let db;
-/*
+
 self.addEventListener("install",e=>{
   try{
     const req=indexedDB.open("db",1);
@@ -81,10 +81,9 @@ const decrypt=async req=>{
 };
 
 self.addEventListener("fetch",e=>{
-  if(e.request.url.test(/\.[a-z]+-e$/){
+  if(e.request.url.test(/\.[a-z]+-e$/)){
     e.respondWith(decrypt(e.request));
   }else{
     e.respondWith(fetch(e.request));
   }
 });
-)/
