@@ -1,5 +1,5 @@
 let db;
-
+/*
 self.addEventListener("install",e=>{
   try{
     const req=indexedDB.open("db",1);
@@ -87,3 +87,4 @@ self.addEventListener("fetch",e=>{
     e.respondWith(fetch(e.request));
   }
 });
+)/
