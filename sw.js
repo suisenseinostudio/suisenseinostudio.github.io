@@ -59,14 +59,18 @@ const decrypt=async req=>{
       try{
         const cursor=e.target.result;
         if(cursor){
+          console.log(`decrypting with "${cursor.value}"...`)
           const key=await deriveKey(cursor.value);
           const result=await crypto.subtle.decrypt(algo,key,data);
           if((new TextDecoder()).decode(result.slice(0,8*12))==(new TextDecoder()).decode(iv)){
+            console.log("succeeded");
             return new Blob([result.slice(8*12,result.byteLength)]);
           }else{
+            console.log("failed");
             cursor.continue();
           }
         }else{
+          console.log("no more pass");
           return new Response(null,{status:401});
         }
       }catch(err){
