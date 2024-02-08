@@ -54,10 +54,6 @@ const deriveKey=async(pass)=>{
 };
 console.log("done");
 
-self.addEventListener("message",e=>{
-  db.transaction("keys","readwrite").objectStore("pass").add(e.data,e.data);
-});
-
 const decrypt=async req=>{
   try{
     const res=await (await fetch(req)).arrayBuffer();
@@ -83,9 +79,13 @@ const decrypt=async req=>{
   }
 };
 
-self.addEventListener("fetch",e=>{
+self.addEventListener("fetch",async e=>{
   console.log(e.request.url);
-  if(/-e$/.test(e.request.url)){
+  if(/sw-login$/.test(e.request.url)){
+    const pass=await e.request.text();
+    db.transaction("keys","readwrite").objectStore("pass").add(pass,pass);
+    e.respondWith(new Response(null,{status:202}));
+  }else if(/-e$/.test(e.request.url)){
     console.log("encrypted file");
     e.respondWith(decrypt(e.request));
   }else{
