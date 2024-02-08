@@ -1,11 +1,13 @@
 try{
-  navigator.serviceWorker.register("sw.js");
+  navigator.serviceWorker.register("sw.js").then(rg=>{
+    rg.active.postMessage("hello");
+  }).then(()=>{
+    document.querySelectorAll("[data-src]").forEach(elm=>{
+      fetch(elm.dataset.src).then(res=>res.text()).then(txt=>{
+        elm.innerHTML=txt;
+      });
+    });
+  });
 }catch(err){
   console.error(err);
 }
-
-document.querySelectorAll("[data-src]").forEach(elm=>{
-  fetch(elm.dataset.src).then(res=>res.text()).then(txt=>{
-    elm.innerHTML=txt;
-  });
-});
