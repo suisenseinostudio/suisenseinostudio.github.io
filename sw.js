@@ -1,18 +1,23 @@
 let db;
 
 self.addEventListener("install",e=>{
-  const req=indexedDB.open("db",1);
-  req.onsuccess=event=>{
-    db=event.target.result;
-    db.onerror=errEvent=>console.error("db:"+errEvent.target.errorCode);
-  };
-  req.onupgradeneeded=event=>{
-    try{
-      db.createObjectStore("pass");
-    }catch(err){
-      console.error(err);
-    }
-  };
+  try{
+    const req=indexedDB.open("db",1);
+    req.onsuccess=event=>{
+      db=event.target.result;
+      db.onerror=errEvent=>console.error("db:"+errEvent.target.errorCode);
+    };
+    req.onupgradeneeded=event=>{
+      try{
+        db.createObjectStore("pass");
+      }catch(err){
+        console.error(err);
+      }
+    };
+  }catch(err){
+    console.error("error in oninstall");
+    console.error(err);
+  }
 });
 
 const importKey=async(pass)=>{
@@ -20,7 +25,8 @@ const importKey=async(pass)=>{
     const data=(new TextEncoder()).encode(pass);
     return window.crypto.subtle.importKey("raw",data,"PBKDF2",false,["deriveKey"]);
   }catch(err){
-    console.error("importKey:"+err);
+    console.error("error in importKey");
+    console.error(err);
   }
 };
 
@@ -31,7 +37,8 @@ const deriveKey=async(pass)=>{
     const base=await importKey(pass);
     return window.crypto.subtle.deriveKey(algo,base,{name:"AES-GCM",length:256},false,["encrypt"]);
   }catch(err){
-    console.error("deriveKey:"+err);
+    console.error("error in deriveKey");
+    console.error(err);
   }
 };
 
@@ -45,7 +52,7 @@ const decrypt=async req=>{
     const iv=res.slice(0,8*12);
     const algo={name:"AES-GCM",iv};
     const data=res.slice(8*12,res.byteLength);
-    db.transaction("pass").openCursor().onsucess=async e=>{
+    db.transaction("pass").openCursor().onsuccess=async e=>{
       try{
         const cursor=e.target.result;
         if(cursor){
@@ -60,7 +67,7 @@ const decrypt=async req=>{
           return new Response(null,{status:401});
         }
       }catch(err){
-        console.error("openCursor:"+err);
+        console.error("error in openCursor.onsuccess");
       }
     }
   }catch(err){
