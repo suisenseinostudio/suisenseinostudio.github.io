@@ -83,4 +83,4 @@ self.addEventListener("fetch",e=>{
   }else{
     e.respondWith(fetch(e.request));
   }
-}
+});
