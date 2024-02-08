@@ -36,6 +36,7 @@ const decrypt=async req=>{
     }else{
       return new Response(null,{status:401});
     }
+  }
 };
 
 self.addEventListener("fetch",e=>{
