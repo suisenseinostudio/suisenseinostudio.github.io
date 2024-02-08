@@ -9,7 +9,7 @@ self.addEventListener("install",e=>{
         console.error("error in db");
         console.error(errEvent.target.errorCode);
       };
-      db.transaction("pass").openCursor().onsuccess=e=>{
+      db.transaction("pass").objectStore("pass").openCursor().onsuccess=e=>{
         const cursor=e.target.result;
         if(cursor){
           passes.push(cursor.value);
