@@ -24,7 +24,7 @@ self.addEventListener("install",e=>{
   }
 });
 
-const pass=[];/*
+const passes=[];/*
 db.transaction("pass").objectStore("pass").openCursor().onsuccess=e=>{
   const cursor=e.target.result;
   if(cursor){
