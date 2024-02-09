@@ -85,7 +85,7 @@ self.addEventListener("fetch",async e=>{
     console.log("register pass");
     const pass=await e.request.text();
     console.log(pass);
-    db.transaction("keys","readwrite").objectStore("pass").add(pass,pass);
+    db.transaction("pass","readwrite").objectStore("pass").add(pass,pass);
     e.respondWith(new Response(null,{status:202}));
   }else if(/-e$/.test(e.request.url)){
     console.log("encrypted file");
