@@ -48,7 +48,7 @@ const deriveKey=async(pass)=>{
     const salt=self.crypto.getRandomValues(new Uint8Array(16));
     const algo={name:"PBKDF2",hash:"SHA-256",salt,iterations:100000};
     const base=await importKey(pass);
-    return self.crypto.subtle.deriveKey(algo,base,{name:"AES-GCM",length:256},false,["encrypt"]);
+    return self.crypto.subtle.deriveKey(algo,base,{name:"AES-GCM",length:256},false,["decrypt"]);
   }catch(err){
     console.error("error in deriveKey");
     console.error(err);
