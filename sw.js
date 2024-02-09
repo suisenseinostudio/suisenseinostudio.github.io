@@ -6,8 +6,7 @@ self.addEventListener("install",e=>{
     req.onsuccess=event=>{
       db=event.target.result;
       db.onerror=errEvent=>{
-        console.error("error in db");
-        console.error(errEvent.target.errorCode);
+        console.error(`error in db:${errEvent.target.errorCode}`);
       };
     };
     req.onupgradeneeded=event=>{
@@ -19,8 +18,7 @@ self.addEventListener("install",e=>{
       }
     };
   }catch(err){
-    console.error("error in oninstall");
-    console.error(err);
+    console.error(`error in oninstall:${err.name}:${err.message})`);
   }
 });
 
@@ -38,8 +36,7 @@ const importKey=async(pass)=>{
     const data=(new TextEncoder()).encode(pass);
     return self.crypto.subtle.importKey("raw",data,"PBKDF2",false,["deriveKey"]);
   }catch(err){
-    console.error("error in importKey");
-    console.error(err);
+    console.error(`error in importKey:${err.name}:${err.message})`);
   }
 };
 
@@ -50,8 +47,7 @@ const deriveKey=async(pass)=>{
     const base=await importKey(pass);
     return self.crypto.subtle.deriveKey(algo,base,{name:"AES-GCM",length:256},false,["decrypt"]);
   }catch(err){
-    console.error("error in deriveKey");
-    console.error(err);
+    console.error(`error in deriveKey:${err.name}:${err.message})`);
   }
 };
 console.log("done");
@@ -78,8 +74,7 @@ const decrypt=async req=>{
     console.log("no more pass");
     return new Response(null,{status:401});
   }catch(err){
-    console.error("error in decrypt");
-    console.error(err);
+    console.error(`error in decrypt:${err.name}:${err.message})`);
   }
 };
 
