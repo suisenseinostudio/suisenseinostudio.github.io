@@ -24,14 +24,14 @@ self.addEventListener("install",e=>{
   }
 });
 
-const pass=[];
+const pass=[];/*
 db.transaction("pass").objectStore("pass").openCursor().onsuccess=e=>{
   const cursor=e.target.result;
   if(cursor){
     passes.push(cursor.value);
     cursor.continue();
   }
-};
+};*/
 
 const importKey=async(pass)=>{
   try{
