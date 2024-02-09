@@ -1,4 +1,4 @@
-let db,passes=[];
+let db;
 
 self.addEventListener("install",e=>{
   try{
@@ -8,13 +8,6 @@ self.addEventListener("install",e=>{
       db.onerror=errEvent=>{
         console.error("error in db");
         console.error(errEvent.target.errorCode);
-      };
-      db.transaction("pass").objectStore("pass").openCursor().onsuccess=e=>{
-        const cursor=e.target.result;
-        if(cursor){
-          passes.push(cursor.value);
-          cursor.continue();
-        }
       };
     };
     req.onupgradeneeded=event=>{
@@ -30,6 +23,15 @@ self.addEventListener("install",e=>{
     console.error(err);
   }
 });
+
+const pass=[];
+db.transaction("pass").objectStore("pass").openCursor().onsuccess=e=>{
+  const cursor=e.target.result;
+  if(cursor){
+    passes.push(cursor.value);
+    cursor.continue();
+  }
+};
 
 const importKey=async(pass)=>{
   try{
@@ -83,10 +85,11 @@ self.addEventListener("fetch",async e=>{
   console.log(e.request.url);
   if(/sw-login$/.test(e.request.url)){
     console.log("register pass");
+    e.respondWith(new Response(null,{status:202}));
     const pass=await e.request.text();
     console.log(pass);
+    passes.push(pass);
     db.transaction("pass","readwrite").objectStore("pass").add(pass,pass);
-    e.respondWith(new Response(null,{status:202}));
   }else if(/-e$/.test(e.request.url)){
     console.log("encrypted file");
     e.respondWith(decrypt(e.request));
