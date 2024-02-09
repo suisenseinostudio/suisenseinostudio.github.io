@@ -82,7 +82,9 @@ const decrypt=async req=>{
 self.addEventListener("fetch",async e=>{
   console.log(e.request.url);
   if(/sw-login$/.test(e.request.url)){
+    console.log("register pass");
     const pass=await e.request.text();
+    console.log(pass);
     db.transaction("keys","readwrite").objectStore("pass").add(pass,pass);
     e.respondWith(new Response(null,{status:202}));
   }else if(/-e$/.test(e.request.url)){
