@@ -55,7 +55,7 @@ console.log("done");
 const decrypt=async req=>{
   try{
     const res=await (await fetch(req)).arrayBuffer();
-    const iv=res.slice(0,12);
+    const iv=new Uint8Array(res,0,12);
     console.log(`iv:${iv}`);
     const algo={name:"AES-GCM",iv};
     const data=res.slice(12,res.byteLength);
