@@ -62,19 +62,25 @@ const decrypt=async req=>{
       console.log(`decrypting with "${pass}"...`);
       const key=await deriveKey(pass);
       console.log("derived key...");
-      const result=await crypto.subtle.decrypt(algo,key,data);
-      console.log("decrypted...");
-      if((new TextDecoder()).decode(result.slice(0,12))==(new TextDecoder()).decode(iv)){
-        console.log("succeeded!");
-        return new Blob([result.slice(12,result.byteLength)]);
-      }else{
+      try{
+        const result=await crypto.subtle.decrypt(algo,key,data);
+        console.log("decrypted...");
+        if((new TextDecoder()).decode(result.slice(0,12))==(new TextDecoder()).decode(iv)){
+          console.log("succeeded!");
+          return new Blob([result.slice(12,result.byteLength)]);
+        }else{
+          throw new Error("iv dosn't match");
+        }
+      }catch(err){
+        if(err.message!="iv dosn't match")
+          console.error(`error in crypto.subtle.decrypt:${err.name}:${err.message}`);
         console.log("failed");
       }
     }
     console.log("no more pass");
     return new Response(null,{status:401});
   }catch(err){
-    console.error(`error in decrypt:${err.name}:${err.message})`);
+    console.error(`error in decrypt:${err.name}:${err.message}`);
   }
 };
 
