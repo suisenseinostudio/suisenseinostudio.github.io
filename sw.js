@@ -42,7 +42,6 @@ const decrypt=async req=>{
       console.log(`decrypting with "${pass}"...`);
       try{
         const result=await dec(res,pass);
-        console.log(`result:${JSON.stringify(new Uint8Array(result))}`);
         if(result){
           console.log("succeeded!");
           return result;
