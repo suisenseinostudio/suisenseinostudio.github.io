@@ -45,7 +45,7 @@ const decrypt=async req=>{
         console.log(`result:${JSON.stringify(new Uint8Array(result))}`);
         if(result){
           console.log("succeeded!");
-          return new Blob([result.slice(12,result.byteLength)]);
+          return result;
         }else{
           throw new Error("iv dosn't match");
         }
