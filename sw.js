@@ -48,7 +48,7 @@ const decrypt=async req=>{
       const key=await deriveKey(pass);
       console.log("derived key...");
       try{
-        console.log(`dec(${JSON.stringify(algo)},key(${pass.value}),${JSON.stringify(new Uint8Array(data))})`);
+        console.log(`dec(${JSON.stringify(algo)},key(${pass}),${JSON.stringify(new Uint8Array(data))})`);
         const result=await crypto.subtle.decrypt(algo,key,data);
         console.log(`result:${JSON.stringify(new Uint8Array(result))}`);
         if((new TextDecoder()).decode(result.slice(0,12))==(new TextDecoder()).decode(iv)){
