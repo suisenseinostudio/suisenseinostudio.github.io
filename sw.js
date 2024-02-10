@@ -44,7 +44,7 @@ const decrypt=async req=>{
         const result=await dec(res,pass);
         if(result){
           console.log("succeeded!");
-          return result;
+          return new Response(result);
         }else{
           throw new Error("iv dosn't match");
         }
@@ -55,7 +55,7 @@ const decrypt=async req=>{
       }
     }
     console.log("no more pass");
-    return null;
+    return new Response(null,{status:401});
   }catch(err){
     console.error(`error in decrypt:${err.name}:${err.message}`);
   }
@@ -72,12 +72,7 @@ self.addEventListener("fetch",async e=>{
     db.transaction("pass","readwrite").objectStore("pass").add(pass,pass);
   }else if(/-e$/.test(e.request.url)){
     console.log("encrypted file");
-    const file=await decrypt(e.request);
-    if(file){
-      e.respondWith(new Response(file));
-    }else{
-      e.respondWith(new Response(null,{status:401}));
-    }
+    e.respondWith(await decrypt(e.request));
   }else{
     e.respondWith(fetch(e.request));
   }
