@@ -55,7 +55,7 @@ const decrypt=async req=>{
       }
     }
     console.log("no more pass");
-    return new Response(null,{status:401});
+    return null;
   }catch(err){
     console.error(`error in decrypt:${err.name}:${err.message}`);
   }
@@ -72,7 +72,12 @@ self.addEventListener("fetch",async e=>{
     db.transaction("pass","readwrite").objectStore("pass").add(pass,pass);
   }else if(/-e$/.test(e.request.url)){
     console.log("encrypted file");
-    e.respondWith(decrypt(e.request));
+    const file=await decrypt(e.request);
+    if(file){
+      e.respondWith(new Response(file));
+    }else{
+      e.respondWith(new Rresponse(null,{status:401}));
+    }
   }else{
     e.respondWith(fetch(e.request));
   }
