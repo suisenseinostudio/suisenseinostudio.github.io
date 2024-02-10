@@ -1,4 +1,4 @@
-import {deriveKey} from "https://suisenseinostudio.github.io/deriveKey/derive-key.js";
+import {dec} from "https://suisenseinostudio.github.io/deriveKey/ed.js";
 
 let db;
 
@@ -37,19 +37,11 @@ console.log("done");
 
 const decrypt=async req=>{
   try{
-    const res=await (await fetch(req)).arrayBuffer();
-    const iv=new Uint8Array(res,0,12);
-    console.log(`iv:${iv}`);
-    const algo={name:"AES-GCM",iv};
-    const data=res.slice(12,res.byteLength);
-    console.log(`data:${new Uint8Array(data)}`);
+    const res=await (await fetch(req)).blob();
     for(const pass of passes){
       console.log(`decrypting with "${pass}"...`);
-      const key=await deriveKey(pass);
-      console.log("derived key...");
       try{
-        console.log(`dec(${JSON.stringify(algo)},key(${pass}),${JSON.stringify(new Uint8Array(data))})`);
-        const result=await crypto.subtle.decrypt(algo,key,data);
+        const result=await dec(res,pass);
         console.log(`result:${JSON.stringify(new Uint8Array(result))}`);
         if((new TextDecoder()).decode(result.slice(0,12))==(new TextDecoder()).decode(iv)){
           console.log("succeeded!");
