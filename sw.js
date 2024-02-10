@@ -43,7 +43,7 @@ const decrypt=async req=>{
       try{
         const result=await dec(res,pass);
         console.log(`result:${JSON.stringify(new Uint8Array(result))}`);
-        if((new TextDecoder()).decode(result.slice(0,12))==(new TextDecoder()).decode(iv)){
+        if(result){
           console.log("succeeded!");
           return new Blob([result.slice(12,result.byteLength)]);
         }else{
