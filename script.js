@@ -1,5 +1,5 @@
 try{
-  const rg=navigator.serviceWorker.register("sw.js");
+  const rg=navigator.serviceWorker.register("sw.js",{type:"module"});
 }catch(err){
   console.error(err);
 }
