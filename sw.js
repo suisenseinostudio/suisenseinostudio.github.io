@@ -1,4 +1,4 @@
-import {deriveKey} from "https://raw.githubusercontent.com/suisenseinostudio/deriveKey/main/derive-key.js";
+import {deriveKey} from "https://suisenseinostudio.github.io/deriveKey/derive-key.js";
 
 let db;
 
