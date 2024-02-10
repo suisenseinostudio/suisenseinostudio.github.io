@@ -72,7 +72,7 @@ self.addEventListener("fetch",async e=>{
     db.transaction("pass","readwrite").objectStore("pass").add(pass,pass);
   }else if(/-e$/.test(e.request.url)){
     console.log("encrypted file");
-    e.respondWith(await decrypt(e.request));
+    e.respondWith(decrypt(e.request));
   }else{
     e.respondWith(fetch(e.request));
   }
