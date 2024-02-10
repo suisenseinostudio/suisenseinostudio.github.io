@@ -59,6 +59,7 @@ const decrypt=async req=>{
     console.log(`iv:${iv}`);
     const algo={name:"AES-GCM",iv};
     const data=res.slice(12,res.byteLength);
+    console.log(`data:${new Uint8Array(data)}`);
     for(const pass of passes){
       console.log(`decrypting with "${pass}"...`);
       const key=await deriveKey(pass);
