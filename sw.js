@@ -76,7 +76,7 @@ self.addEventListener("fetch",async e=>{
     if(file){
       e.respondWith(new Response(file));
     }else{
-      e.respondWith(new Rresponse(null,{status:401}));
+      e.respondWith(new Response(null,{status:401}));
     }
   }else{
     e.respondWith(fetch(e.request));
