@@ -21,7 +21,10 @@ window.onload=()=>{
       if(res.status==401)location.href="/login";
       return res.text();
     }).then(txt=>{
-      elm.innerHTML=txt;
+      elm.innerHTML=txt
+        .replaceAll(/^##([^#].*)$/gm,"<h3>$1</h3>")
+        .replaceAll(/^###([^#].*)$/gm,"<h4>$1</h4>")
+        .replaceAll(/^([^#].*)$/gm,"<p>$1</p>");
     });
   });
 };
