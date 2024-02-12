@@ -32,7 +32,9 @@ window.onload=()=>{
       elm.innerHTML=txt
         .replaceAll(/^##([^#].*)$/gm,"<h3>$1</h3>")
         .replaceAll(/^###([^#].*)$/gm,"<h4>$1</h4>")
-        .replaceAll(/^([^#].*)$/gm,"<p>$1</p>");
+        .replaceAll(/^####([^#].*)$/gm,"<h5>$1</h5>")
+        .replaceAll(/^([^#].*)$/gm,"<p>$1</p>")
+        .replaceAll(/\*\*(.*?)\*\*/gm,"<span class='marker'>$1</span>");
     });
   });
 };
