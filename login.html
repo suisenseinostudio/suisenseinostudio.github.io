@@ -1,19 +1,119 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>login - suisenseinostudio</title>
-    <script type="module" src="script.js"></script>
-  </head>
-  <body>
-    <header>
-      <h1>login suisenseinostudio</h1>
-    </header>
-    <main>
-      <form id="login-form">
-        <input type="password" id="password" required>
-      </form>
-    </main>
-    <footer>suisenseinostudio</footer>
-  </body>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>
+    ログイン | 推薦生のSTUDIO
+  </title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="/img/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/css/reset.css">
+  <script type="module" src="/js/crypt.js"></script>
+</head>
+
+<style>
+  body {
+    background-image: url('/img/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: repeat;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+  }
+
+  main {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.233);
+    display: grid;
+    place-items: center;
+  }
+
+  #login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10vh 0;
+    width: 90vw;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-right-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.237);
+    backdrop-filter: blur(20px);
+    text-align: center;
+  }
+
+  #login h2 {
+    font-size: 2rem;
+    margin: 20px 0;
+  }
+
+  .img-wrapper img {
+    width: 80px;
+    margin-bottom: 10px;
+    transition: all 1s ease-in-out;
+  }
+
+  .img-wrapper:hover img {
+    transform: rotateZ(360deg);
+  }
+
+  #login input {
+    margin: 10px 0;
+  }
+
+  #password {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    outline: none;
+  }
+
+  #password::placeholder {
+    color: #414141;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    /* font-size: 1.2rem; */
+    background-color: #1c1c1c;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .login-btn:hover {
+    background-color: #414141;
+  }
+</style>
+
+<body>
+  <main>
+    <div id="login-wrapper">
+      <section id="login">
+        <div class="img-wrapper">
+          <img src="/img/suisen_logo.svg" alt="推薦生のSTUDIO">
+        </div>
+        <h2>LOGIN</h2>
+        <p>このサイトはパスワード保護されています。</p>
+        <form id="login-form">
+          <div class="input-area">
+            <input type="password" id="password" name="password" placeholder="パスワードを入力" required>
+          </div>
+          <input type="submit" value="ログイン" class="login-btn">
+        </form>
+      </section>
+    </div>
+  </main>
+</body>
+
 </html>
