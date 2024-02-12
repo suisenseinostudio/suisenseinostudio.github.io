@@ -30,11 +30,13 @@ window.onload=()=>{
       return res.text();
     }).then(txt=>{
       elm.innerHTML=txt
-        .replaceAll(/^([^#].+)$/gm,"<p>$1</p>")
+        .replaceAll(/^([^#].*)$/gm,"<p>$1</p>")
         .replaceAll(/^##([^#].+)$/gm,"<h3>$1</h3>")
         .replaceAll(/^###([^#].+)$/gm,"<h4>$1</h4>")
         .replaceAll(/^####([^#].+)$/gm,"<h5>$1</h5>")
-        .replaceAll(/\*\*(.+?)\*\*/gm,"<span class='marker'>$1</span>");
+        .replaceAll(/\*\*(.+?)\*\*/gm,"<span class='marker'>$1</span>")
+        .replaceAll(/\+\[(.+?)\]\((.+?)\)/gm,"<a href='$2' class='normal-link' target='_blank' rel='noopener noreferrer'>$1</a>")
+        .replaceAll(/\[(.+?)\]\((.+?)\)/gm,"<a href='$2' class='normal-link'>$1</a>");
     });
   });
 };
