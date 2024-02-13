@@ -18,6 +18,7 @@ window.onload=()=>{
       .then(e=>(401==e.status&&(location.href="/login.html"),e.text()))
       .then(e=>{
         console.log(e)
+        console.log(e.replaceAll(/^([^#].*\S.*)$/gm,"<p>$1</p>"))
         l.innerHTML=e
           .replaceAll(/^([^#].*\S.*)$/gm,"<p>$1</p>")
           .replaceAll(/^##([^#].*\S.*)$/gm,"<h3>$1</h3>")
