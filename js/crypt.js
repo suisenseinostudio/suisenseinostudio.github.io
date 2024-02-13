@@ -20,7 +20,7 @@ window.onload=()=>{
         console.log(e)
         console.log(e.replaceAll(/^([^#].*\S.*)$/gm,"<p>$1</p>"))
         l.innerHTML=e
-          .replaceAll(/^([^#].*\S.*)$/gm,"<p>$1</p>")
+          .replaceAll(/^\s*([^#\s].*)$/gm,"<p>$1</p>")
           .replaceAll(/^##([^#].*\S.*)$/gm,"<h3>$1</h3>")
           .replaceAll(/^###([^#].*\S.*)$/gm,"<h4>$1</h4>")
           .replaceAll(/^####([^#].*\S.*)$/gm,"<h5>$1</h5>")
