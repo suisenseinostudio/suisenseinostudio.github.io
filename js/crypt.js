@@ -6,16 +6,16 @@ window.onload=()=>{
   e&&(e.onsubmit=e=>{
     e.preventDefault(),
     fetch(new Request("/sw-login",{method:"POST",body:document.getElementById("password").value})),
-    location.href="/"
+    location.href=new URLSearchParams(location.search).get("rd")||"/";
   }),
   document.querySelectorAll("[data-plain]").forEach(l=>{
     fetch(l.dataset.plain)
-      .then(e=>(401==e.status&&(location.href="/login.html"),e.text()))
+      .then(e=>(401==e.status&&(location.href=`/login.html?rd=${location.pathname}`),e.text()))
       .then(e=>{l.innerHTML=e})
   }),
   document.querySelectorAll("[data-src]").forEach(l=>{
     fetch(l.dataset.src)
-      .then(e=>(401==e.status&&(location.href="/login.html"),e.text()))
+      .then(e=>(401==e.status&&(location.href=`/login.html?rd=${location.pathname}`),e.text()))
       .then(e=>{
         l.innerHTML=e
           .replaceAll(/^\s*([^#\s].*)$/gm,"<p>$1</p>")
