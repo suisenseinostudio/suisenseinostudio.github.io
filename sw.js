@@ -1,1 +1,76 @@
-import{dec}from"https://suisenseinostudio.github.io/deriveKey/ed.js";let db;self.addEventListener("install",e=>{try{var s=indexedDB.open("db",2);s.onsuccess=e=>{(db=e.target.result).onerror=e=>{console.error("error in db:"+e.target.errorCode)}},s.onupgradeneeded=e=>{try{(db=e.target.result).createObjectStore("pass")}catch(e){console.log(e)}}}catch(e){console.error(`error in oninstall:${e.name}:${e.message})`)}});const passes=[],decrypt=(console.log("done"),async e=>{try{var s=await(await fetch(e)).blob();for(const o of passes){console.log(`decrypting with "${o}"...`);try{var r=await dec(s,o);if(r)return console.log("succeeded!"),new Response(r);throw new Error("iv dosn't match")}catch(e){"iv dosn't match"!=e.message&&console.error(`error in crypto.subtle.decrypt:${e.name}:`+e.message),console.log("failed")}}return console.log("no more pass"),new Response(null,{status:401})}catch(e){console.error(`error in decrypt:${e.name}:`+e.message)}});self.addEventListener("fetch",async e=>{var s;console.log(e.request.url),/sw-login$/.test(e.request.url)?(console.log("register pass"),e.respondWith(new Response(null,{status:202})),s=await e.request.text(),console.log(s),passes.push(s),db.transaction("pass","readwrite").objectStore("pass").add(s,s)):/-e$/.test(e.request.url)?(console.log("encrypted file"),e.respondWith(decrypt(e.request))):e.respondWith(fetch(e.request))});
+import {dec} from "https://suisenseinostudio.github.io/deriveKey/ed.js";
+
+let db;
+const passes=[];
+
+try{
+  const req=indexedDB.open("db",2);
+  req.onsuccess=event=>{
+    db=event.target.result;
+    db.onerror=errEvent=>{
+      console.error(`error in db:${errEvent.target.errorCode}`);
+    };
+    db.transaction("pass").objectStore("pass").openCursor().onsuccess=e=>{
+      const cursor=e.target.result;
+      if(cursor){
+        passes.push(cursor.value);
+        cursor.continue();
+      }
+    };
+  };
+  req.onupgradeneeded=event=>{
+    try{
+      db=event.target.result;
+      db.createObjectStore("pass");
+    }catch(err){
+      console.log(err);
+    }
+  };
+}catch(err){
+  console.error(`error in oninstall:${err.name}:${err.message})`);
+}
+
+console.log("done");
+
+const decrypt=async req=>{
+  try{
+    const res=await (await fetch(req)).blob();
+    for(const pass of passes){
+      console.log(`decrypting with "${pass}"...`);
+      try{
+        const result=await dec(res,pass);
+        if(result){
+          console.log("succeeded!");
+          return new Response(result);
+        }else{
+          throw new Error("iv dosn't match");
+        }
+      }catch(err){
+        if(err.message!="iv dosn't match")
+          console.error(`error in crypto.subtle.decrypt:${err.name}:${err.message}`);
+        console.log("failed");
+      }
+    }
+    console.log("no more pass");
+    return new Response(null,{status:401});
+  }catch(err){
+    console.error(`error in decrypt:${err.name}:${err.message}`);
+  }
+};
+
+self.addEventListener("fetch",async e=>{
+  console.log(e.request.url);
+  if(/sw-login$/.test(e.request.url)){
+    console.log("register pass");
+    e.respondWith(new Response(null,{status:202}));
+    const pass=await e.request.text();
+    console.log(pass);
+    passes.push(pass);
+    db.transaction("pass","readwrite").objectStore("pass").add(pass,pass);
+  }else if(/-e$/.test(e.request.url)){
+    console.log("encrypted file");
+    e.respondWith(decrypt(e.request));
+  }else{
+    e.respondWith(fetch(e.request));
+  }
+});
