@@ -18,6 +18,7 @@ window.onload=()=>{
       .then(e=>(401==e.status&&(location.href=`/login.html?rd=${location.pathname}`),e.text()))
       .then(e=>{
         l.innerHTML=e
+          .replaceAll("-----","<div class='spacer'></div>")
           .replaceAll(/^\s*([^#<\s].*)$/gm,"<p>$1</p>")
           .replaceAll(/^##([^#].*\S.*)$/gm,"<h3>$1</h3>")
           .replaceAll(/^###([^#].*\S.*)$/gm,"<h4>$1</h4>")
